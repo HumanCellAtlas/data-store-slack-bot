@@ -4,6 +4,9 @@
       "api_gateway_stage": "api"
     }
   }, 
-  "version": "2.0", 
+  "version": "2.0",
+  "environment_variables": {
+    "GOOGLE_APPLICATION_CREDENTIALS": "chalicelib/google-service-account-credentials.json"
+  },
   "app_name": "slack_bot"
 }
