@@ -30,12 +30,18 @@ def index():
         response = cli.make_request(args)
 
         if isinstance(response, requests.Response):
-            payload_text = json.dumps(response.json(), indent=4)
+            if response.headers['content-length'] > 2 ** 20:
+                payload_text = "Content too long to show in slack. Try using the cli or python bindings."
+            else:
+                payload_text = response.content.decode()
+                app.log.debug("Response content decode type is {}".format(type(payload_text)))
         elif isinstance(response, str):
             payload_text = response
-        else:
+        else:  # response type is json
             payload_text = json.dumps(response, indent=4)
-
+    except UnicodeDecodeError as e:
+        app.log.debug(e)
+        payload_text = "Unicode could not be decoded. The file is likely gzipped."
     except Exception as e:
         app.log.debug(e)
         payload_text = e.args[0]
